@@ -256,6 +256,15 @@ class Fishes {
         }
     }
 
+    //spiser random
+    feed() {
+            for (let i = 0; i < this.fishArray.length; i++) {
+                if (random(1) < 0.05) { // tilfældig chance for at spise
+                    this.fishArray[i].hunger++;
+                }
+            }
+        }
+
 }
 
 //------------------------------PREDATOR class (extender Fish)----------------------

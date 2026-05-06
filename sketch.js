@@ -24,7 +24,11 @@ function draw() {
     background(20, 100, 200);
     fishes.move();
     fishes.moveToStart();
+
+    //spiser og formerer sig (spisefunktion skal arbejdes mere på lige pt er den bare random)
+    fishes.feed();
     fishes.spawn();
+
 
     // opdater alle rovfisk (jager og fanger fisk)
     for (let i = 0; i < predators.length; i++) {
