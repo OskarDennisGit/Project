@@ -3,16 +3,16 @@ let foodY;
 
 class Mad {
 
-    setup() {
+    constructor() {
         // Placer maden tilfældigt på lærredet
-        foodX = random(width);
-        foodY = random(height);
+        this.foodX = random(width);
+        this.foodY = random(height);
     }
 
-    function drawFood() {
+    drawFood() {
         fill("lime"); // farve for maden
         noStroke();
-        circkle(foodX, foodY, 10, 10); // tegner maden som en cirkel
+        circle(this.foodX, this.foodY, 10, 10); // tegner maden som en cirkel
 
 }
 }

@@ -3,7 +3,7 @@ let height = 1000;
 let initialFishAmount = 100;
 let fishes;
 let predators; //
-
+let food;
 
 //-------------------------------------------SETUP--------------------------------------------------
 
@@ -11,12 +11,16 @@ function setup() {
     createCanvas(width, height);
     fishes = new Fishes(initialFishAmount);
 
-    
+    food = [];
     predators = [];
 
     //laver 2 rovfisk med position, størrelse og fangstradius (meget lille radius)
     predators.push(new Predator(300, 300, 6, 8));
     predators.push(new Predator(1100, 700, 6, 8));
+    
+    for (let i = 0; i < 6; i++) {
+    food.push(new Mad());
+    }
 }
 
 //-------------------------------------------DRAW--------------------------------------------------
@@ -40,6 +44,10 @@ function draw() {
     }
 
     fishes.draw();
+
+    for (let i = 0; i < food.length; i++) {
+        food[i].drawFood();
+    }
 }
 
 
