@@ -1,5 +1,5 @@
-let foodX;
-let foodY;
+let foods = []; // array til at holde maden
+
 
 class Mad {
 

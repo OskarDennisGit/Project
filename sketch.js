@@ -46,6 +46,10 @@ function draw() {
 
     fishes.draw();
 
+    if (random(1) < 0.02) { // tilfældigt respawn af maden (2% chance hver frame)
+        food.push(new Mad());
+    }
+    
     for (let i = 0; i < food.length; i++) {
         food[i].drawFood();
     }
