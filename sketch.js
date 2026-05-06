@@ -2,7 +2,7 @@ let width = 1500;
 let height = 1000;
 let initialFishAmount = 100;
 let fishes;
-let boats;
+let predators; //
 
 
 //-------------------------------------------SETUP--------------------------------------------------
@@ -11,12 +11,12 @@ function setup() {
     createCanvas(width, height);
     fishes = new Fishes(initialFishAmount);
 
-    //laver array til fiskekuttere
-    boats = [];
+    
+    predators = [];
 
-    //laver 2 fiskekuttere med position og fangstradius
-    boats.push(new FishingBoat(300, 300, 60));
-    boats.push(new FishingBoat(1100, 700, 60));
+    //laver 2 rovfisk med position, størrelse og fangstradius (meget lille radius)
+    predators.push(new Predator(300, 300, 6, 8));
+    predators.push(new Predator(1100, 700, 6, 8));
 }
 
 //-------------------------------------------DRAW--------------------------------------------------
@@ -25,25 +25,20 @@ function draw() {
     fishes.move();
     fishes.moveToStart();
 
-    //lader alle fiskekuttere prøve at fange fisk
-    for (let i = 0; i < boats.length; i++) {
-        boats[i].catchFish(fishes.fishArray);
+    // opdater alle rovfisk (jager og fanger fisk)
+    for (let i = 0; i < predators.length; i++) {
+        predators[i].hunt(fishes.fishArray);   // find nærmeste fisk og brug seek
+        predators[i].move();                   // arvet fra Fish – opdater position
+        predators[i].moveToStart();            // wrapper rundt (samme som almindelige fisk)
+        predators[i].catchFish(fishes.fishArray);
+        predators[i].draw();
     }
 
     fishes.draw();
-
-    //tegner alle fiskekuttere
-    for (let i = 0; i < boats.length; i++) {
-        boats[i].draw();
-        boats[i].move();
-        if (boats[i].x > width + 20) {
-            boats[i].x = -20;
-        }
-    }
 }
 
 
-//----------------------------------------KlASSER--------------------------------------------
+//----------------------------------------KLASSER--------------------------------------------
 
 
 //--------------------------------------------FISH CLASS------------------------------
@@ -281,57 +276,89 @@ class Fishes {
 
 }
 
-//------------------------------Fishing boat class----------------------
-class FishingBoat {
-    constructor(x, y, catchRadius) {
-        //bådens position
-        this.x = x;
-        this.y = y;
-
-        //hvor stor bådens fangstcirkel er
-        this.catchRadius = catchRadius;
-
-        //counter for hvor mange fisk båden har fanget
-        this.caughtFish = 0;
+//------------------------------PREDATOR class (extender Fish)----------------------
+class Predator extends Fish {
+    constructor(x, y, size, catchRadius) {
+        super(x, y, size);               // nedarv position, velocity, acceleration mv.
+        this.maxSpeed = 1.8;            // langsommere end almindelige fisk 
+        this.catchRadius = catchRadius;  // 
+        this.caughtFish = 0;             // tæller for fangede fisk
     }
 
-    // bådene bevæger sig bare langs x aksen for nu
-    move() {
-        this.x = this.x + 4;
+    // Finder den nærmeste fisk og bruger seek() 
+hunt(fishArray) {
+    // Hvis der ingen fisk er tilbage, er der intet at jage
+    if (fishArray.length === 0) return;
+
+    let closest = null;
+    let closestDist = Infinity; 
+
+    // Løb alle fisk igennem og find den nærmeste
+    for (let i = 0; i < fishArray.length; i++) {
+        let d = p5.Vector.dist(this.position, fishArray[i].position);
+        if (d < closestDist) {
+            closestDist = d;
+            closest = fishArray[i];
+        }
     }
 
+    //  seek() kaldes, den beregner en kraft der peger mod den nærmeste fisk og lægger den til accelerationen
+    let steering = this.seek(closest.position);
+    this.acceleration.add(steering); 
+}
+
+    // Fanger fisk (meget lille radius, så fisken skal røres helt tæt på)
     catchFish(fishArray) {
-        //går baglæns gennem alle fisk i arrayet
         for (let i = fishArray.length - 1; i >= 0; i--) {
             let fish = fishArray[i];
-
-            //finder afstanden mellem båden og en fisk
-            let d = dist(this.x, this.y, fish.position.x, fish.position.y);
-
-            //hvis fisken er inde i fangstcirklen, bliver den fanget
+            let d = p5.Vector.dist(this.position, fish.position);
             if (d < this.catchRadius) {
                 fishArray.splice(i, 1);
-                this.caughtFish = this.caughtFish + 1;
+                this.caughtFish++;
             }
         }
     }
 
+    // Wrap-around – præcis samme logik som Fishes.moveToStart (men kun for én fisk)
+    moveToStart() {
+        if (this.position.x > width + this.size) {
+            this.position.x = 0 - this.size;
+        }
+        if (this.position.x < 0 - this.size) {
+            this.position.x = width + this.size;
+        }
+        if (this.position.y > height + this.size) {
+            this.position.y = 0 - this.size;
+        }
+        if (this.position.y < 0 - this.size) {
+            this.position.y = height + this.size;
+        }
+    }
+
+    // Tegner predator som en rød, lidt større trekant
     draw() {
-        //tegner selve båden
-        fill(120);
-        noStroke();
-        rect(this.x - 10, this.y - 5, 20, 10);
+        let theta = this.velocity.heading() + radians(90); //Dines gjorde dette så jeg kopierede det, jeg forstår det ikke 100%
+        fill("red");
+        stroke(255);
+        push();
+        translate(this.position.x, this.position.y);
+        rotate(theta);
+        beginShape();
+        vertex(0, -this.size * 3);
+        vertex(-this.size * 1.5, this.size * 3);
+        vertex(this.size * 1.5, this.size * 3);
+        endShape(CLOSE);
+        pop();
 
-        //tegner bådens fangstområde
+        // Viser fangstradius 
         noFill();
-        stroke(255, 0, 0);
-        strokeWeight(2);
-        circle(this.x, this.y, this.catchRadius * 2);
+        stroke(255, 0, 0, 100);
+        circle(this.position.x, this.position.y, this.catchRadius * 2);
 
-        //viser hvor mange fisk båden har fanget
+        // Viser antal fangede fisk
         noStroke();
         fill(255);
         textSize(14);
-        text(this.caughtFish, this.x + 15, this.y - 10);
+        text(this.caughtFish, this.position.x + 15, this.position.y - 10);
     }
 }
