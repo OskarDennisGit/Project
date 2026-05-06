@@ -13,6 +13,8 @@ class Fish {
         this.maxSpeed = 3;
         this.maxSteeringForce = 0.5;
 
+        this.hunger = 0;
+
         //creating allignment force
         this.allignmentForce = createVector(0, 0);
     }
@@ -140,6 +142,7 @@ class Fish {
         }   
     }
 
+
     //tjækker for fisk tæt på og bevæger sig væk
     seperate(boids) {
         let desiredSeparation = 25;
@@ -182,7 +185,16 @@ class Fish {
         
     }
 
+    canSpawn() {
+        if (this.hunger > 5) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
+   
+  
 
 } 
 
@@ -231,6 +243,19 @@ class Fishes {
         }
     }
 
+     //hvis en fisk har mad nok, kan den formere sig og lave en ny fisk.
+    spawn() {
+        for (let i = 0; i < this.fishArray.length; i++) {
+            if (this.fishArray[i].canSpawn()) {
+                let xpos = this.fishArray[i].position.x + random(-10, 10);
+                let ypos = this.fishArray[i].position.y + random(-10, 10);
+                let size = 3;
+                this.fishArray.push(new Fish(xpos, ypos, size));
+                this.fishArray[i].hunger = 0; //reset hunger after spawning
+            }
+        }
+    }
+
 }
 
 //------------------------------PREDATOR class (extender Fish)----------------------
@@ -244,7 +269,7 @@ class Predator extends Fish {
 
 
     // Finder den nærmeste fisk og bruger seek() 
-hunt(fishArray) {
+    hunt(fishArray) {
     // Hvis der ingen fisk er tilbage, er der intet at jage
     if (fishArray.length === 0) return;
 
@@ -263,7 +288,7 @@ hunt(fishArray) {
     //  seek() kaldes, den beregner en kraft der peger mod den nærmeste fisk og lægger den til accelerationen
     let steering = this.seek(closest.position);
     this.acceleration.add(steering); 
-}
+    }
 
     // Fanger fisk (meget lille radius, så fisken skal røres helt tæt på)
     catchFish(fishArray) {
@@ -319,4 +344,6 @@ hunt(fishArray) {
         textSize(14);
         text(this.caughtFish, this.position.x + 15, this.position.y - 10);
     }
+
+
 }

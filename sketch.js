@@ -24,6 +24,7 @@ function draw() {
     background(20, 100, 200);
     fishes.move();
     fishes.moveToStart();
+    fishes.spawn();
 
     // opdater alle rovfisk (jager og fanger fisk)
     for (let i = 0; i < predators.length; i++) {
