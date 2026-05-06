@@ -23,21 +23,19 @@ class Fish {
 
     draw() {
     
-       
-    
     //tyvstjålet fra https://p5js.org/examples/classes-and-objects-flocking/ 
     //tegner trekanter baseret på deres position og retning, så de ser ud som om de svømmer i den retning de peger.
     let theta = this.velocity.heading() + radians(90);
     fill("orange");
     stroke(255);
     push();
-    translate(this.position.x, this.position.y);
-    rotate(theta);
-    beginShape();
-    vertex(0, -this.size * 2);
-    vertex(-this.size, this.size * 2);
-    vertex(this.size, this.size * 2);
-    endShape(CLOSE);
+        translate(this.position.x, this.position.y);
+        rotate(theta);
+        beginShape();
+            vertex(0, -this.size * 2);
+            vertex(-this.size, this.size * 2);
+            vertex(this.size, this.size * 2);
+        endShape(CLOSE);
     pop();
     }
 
@@ -185,6 +183,30 @@ class Fish {
             return true;
         } else {
             return false;
+        }
+    }
+
+    seekFood(foodArray) {
+        if (foodArray.length === 0) return;
+
+        let closest = null;
+        let closestDist = Infinity;
+
+        for (let i = 0; i < foodArray.length; i++) {
+            let d = p5.Vector.dist(this.position, foodArray[i].position);
+            if (d < closestDist) {
+                closestDist = d;
+                closest = i;
+            }
+        }
+
+        let steering = this.seek(foodArray[closest].position);
+        this.acceleration.add(steering);
+        
+        // Hvis fisken er tæt nok på maden, spis den og fjern den fra arrayet
+        if (closestDist < 4) {
+            foodArray.splice(closest, 1);
+            this.hunger++; // reset hunger after eating
         }
     }
 
