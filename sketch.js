@@ -30,7 +30,7 @@ function draw() {
     fishes.moveToStart();
 
     //spiser og formerer sig (spisefunktion skal arbejdes mere på lige pt er den bare random)
-    fishes.feed();
+    fishes.feed(food);
     fishes.spawn();
 
 

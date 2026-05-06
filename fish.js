@@ -187,6 +187,8 @@ class Fish {
     seekFood(foodArray) {
         if (foodArray.length === 0) return;
 
+        //nærmeste mad søges ved at løbe gennem foodArray og finde den med den korteste distance til denne fisk.
+        //denne funktion er ens med hunt() i Predator bare kigger igennem madarrayet i stedet for fiskene.
         let closest = null;
         let closestDist = Infinity;
 
@@ -272,11 +274,9 @@ class Fishes {
     }
 
     //spiser random
-    feed() {
+    feed(food) {
             for (let i = 0; i < this.fishArray.length; i++) {
-                if (random(1) < 0.03) { // tilfældig chance for at spise
-                    this.fishArray[i].hunger++;
-                }
+                this.fishArray[i].seekFood(food);
             }
         }
 
