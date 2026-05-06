@@ -1,5 +1,5 @@
-let foodX;
-let foodY;
+let foods = []; // array til at holde maden
+
 
 class Mad {
 
@@ -14,5 +14,5 @@ class Mad {
         noStroke();
         circle(this.foodX, this.foodY, 10, 10); // tegner maden som en cirkel
 
-}
+    }
 }

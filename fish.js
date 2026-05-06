@@ -1,4 +1,6 @@
 //--------------------------------------------FISH CLASS------------------------------
+
+
 class Fish {
 
     constructor(xpos, ypos, size) {
@@ -20,14 +22,7 @@ class Fish {
     }
 
     draw() {
-        /*
-        fill("orange");
-        //push/pop bruges til at tegne hver fisk baseret på deres rotation i stedet for at rotere hele canvaset.
-        push();
-        translate(this.xpos, this.ypos);
-        rotate(this.direction);
-        triangle(0, 0, -this.size, -this.size/2, -this.size, this.size/2);
-        pop();*/
+    
        
     
     //tyvstjålet fra https://p5js.org/examples/classes-and-objects-flocking/ 
