@@ -271,9 +271,10 @@ class Fishes {
 class Predator extends Fish {
     constructor(x, y, size, catchRadius) {
         super(x, y, size);               // nedarv position, velocity, acceleration mv.
-        this.maxSpeed = 1.8;            // langsommere end almindelige fisk 
+        this.maxSpeed = 3;            
         this.catchRadius = catchRadius;  // 
-        this.caughtFish = 0;             // tæller for fangede fisk
+        this.caughtFish = 0;   
+                  // tæller for fangede fisk
     }
 
 
@@ -352,6 +353,18 @@ class Predator extends Fish {
         fill(255);
         textSize(14);
         text(this.caughtFish, this.position.x + 15, this.position.y - 10);
+    }
+
+    //hvis rovfisken har fanget mere end 15 fisk, kan den formere sig og lave en ny rovfisk.
+    spawn() {
+        if (this.caughtFish > 15) {
+            let xpos = this.position.x + random(-20, 20);
+            let ypos = this.position.y + random(-20, 20);
+            let size = 6;
+            let catchRadius = 8;
+            return new Predator(xpos, ypos, size, catchRadius);
+            this.caughtFish = 0; //reset fangede fisk efter spawning
+        }
     }
 
 

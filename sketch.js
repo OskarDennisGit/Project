@@ -37,6 +37,7 @@ function draw() {
         predators[i].moveToStart();            // wrapper rundt (samme som almindelige fisk)
         predators[i].catchFish(fishes.fishArray);
         predators[i].draw();
+        
     }
 
     fishes.draw();
