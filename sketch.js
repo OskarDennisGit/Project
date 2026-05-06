@@ -25,6 +25,11 @@ function draw() {
     fishes.move();
     fishes.moveToStart();
 
+    //spiser og formerer sig (spisefunktion skal arbejdes mere på lige pt er den bare random)
+    fishes.feed();
+    fishes.spawn();
+
+
     // opdater alle rovfisk (jager og fanger fisk)
     for (let i = 0; i < predators.length; i++) {
         predators[i].hunt(fishes.fishArray);   // find nærmeste fisk og brug seek
@@ -32,6 +37,7 @@ function draw() {
         predators[i].moveToStart();            // wrapper rundt (samme som almindelige fisk)
         predators[i].catchFish(fishes.fishArray);
         predators[i].draw();
+        
     }
 
     fishes.draw();
