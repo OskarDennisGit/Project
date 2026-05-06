@@ -186,7 +186,7 @@ class Fish {
     }
 
     canSpawn() {
-        if (this.hunger > 5) {
+        if (this.hunger > 10) {
             return true;
         } else {
             return false;
@@ -259,7 +259,7 @@ class Fishes {
     //spiser random
     feed() {
             for (let i = 0; i < this.fishArray.length; i++) {
-                if (random(1) < 0.05) { // tilfældig chance for at spise
+                if (random(1) < 0.01) { // tilfældig chance for at spise
                     this.fishArray[i].hunger++;
                 }
             }
@@ -362,7 +362,7 @@ class Predator extends Fish {
             let ypos = this.position.y + random(-20, 20);
             let size = 6;
             let catchRadius = 8;
-            return new Predator(xpos, ypos, size, catchRadius);
+            predators.push(new Predator(xpos, ypos, size, catchRadius));
             this.caughtFish = 0; //reset fangede fisk efter spawning
         }
     }
