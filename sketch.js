@@ -41,6 +41,7 @@ function draw() {
         predators[i].moveToStart();            // wrapper rundt (samme som almindelige fisk)
         predators[i].catchFish(fishes.fishArray);
         predators[i].draw();
+        predators[i].spawn();   // spawn nye rovfisk hvis nok fisk er fanget
     }
 
     fishes.draw();
