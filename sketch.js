@@ -285,6 +285,8 @@ class Predator extends Fish {
         this.caughtFish = 0;             // tæller for fangede fisk
     }
 
+    // hej jeh er sigga nu er jeg med 
+    
     // Finder den nærmeste fisk og bruger seek() 
 hunt(fishArray) {
     // Hvis der ingen fisk er tilbage, er der intet at jage
