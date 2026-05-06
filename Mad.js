@@ -1,7 +1,7 @@
 let foodX;
 let foodY;
 
-Class Mad {
+class Mad {
 
     setup() {
         // Placer maden tilfældigt på lærredet
