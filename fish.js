@@ -1,4 +1,6 @@
 //--------------------------------------------FISH CLASS------------------------------
+
+
 class Fish {
 
     constructor(xpos, ypos, size) {
@@ -11,22 +13,15 @@ class Fish {
         this.direction = this.velocity.heading();
 
         this.maxSpeed = 3;
-        this.maxSteeringForce = 0.5;
+        this.maxSteeringForce = 1.2;
+
+        this.hunger = 0;
 
         //creating allignment force
         this.allignmentForce = createVector(0, 0);
     }
 
     draw() {
-        /*
-        fill("orange");
-        //push/pop bruges til at tegne hver fisk baseret på deres rotation i stedet for at rotere hele canvaset.
-        push();
-        translate(this.xpos, this.ypos);
-        rotate(this.direction);
-        triangle(0, 0, -this.size, -this.size/2, -this.size, this.size/2);
-        pop();*/
-       
     
     //tyvstjålet fra https://p5js.org/examples/classes-and-objects-flocking/ 
     //tegner trekanter baseret på deres position og retning, så de ser ud som om de svømmer i den retning de peger.
@@ -34,13 +29,13 @@ class Fish {
     fill("orange");
     stroke(255);
     push();
-    translate(this.position.x, this.position.y);
-    rotate(theta);
-    beginShape();
-    vertex(0, -this.size * 2);
-    vertex(-this.size, this.size * 2);
-    vertex(this.size, this.size * 2);
-    endShape(CLOSE);
+        translate(this.position.x, this.position.y);
+        rotate(theta);
+        beginShape();
+            vertex(0, -this.size * 2);
+            vertex(-this.size, this.size * 2);
+            vertex(this.size, this.size * 2);
+        endShape(CLOSE);
     pop();
     }
 
@@ -140,6 +135,7 @@ class Fish {
         }   
     }
 
+
     //tjækker for fisk tæt på og bevæger sig væk
     seperate(boids) {
         let desiredSeparation = 25;
@@ -182,8 +178,37 @@ class Fish {
         
     }
 
+    canSpawn() {
+        if (this.hunger > 8) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
+    seekFood(foodArray) {
+        if (foodArray.length === 0) return;
 
+        //nærmeste mad søges ved at løbe gennem foodArray og finde den med den korteste distance til denne fisk.
+        //denne funktion er ens med hunt() i Predator bare kigger igennem madarrayet i stedet for fiskene.
+        let closest = null;
+        let closestDist = Infinity;
+
+        for (let food of foodArray) {
+            let d = p5.Vector.dist(this.position, food.position);
+            if (d < closestDist) {
+                closestDist = d;
+                closest = food;
+            }
+        }
+
+        if (closest != null) {
+            let steering = this.seek(closest.position);
+            steering.mult(2.5); //justerer styrken af søge kraften mod maden
+            this.acceleration.add(steering);
+        }
+    }
+    
 } 
 
 //------------------------------container class for all fishes----------------------
@@ -206,8 +231,9 @@ class Fishes {
         }
     }
 
-    move() {
+    move(food) {
         for (let i = 0; i < this.fishArray.length; i++) {
+            this.fishArray[i].seekFood(food);
             this.fishArray[i].school(this.fishArray);
             this.fishArray[i].move();
         }
@@ -231,21 +257,65 @@ class Fishes {
         }
     }
 
+     //hvis en fisk har mad nok, kan den formere sig og lave en ny fisk.
+    spawn() {
+        for (let i = 0; i < this.fishArray.length; i++) {
+            if (this.fishArray[i].canSpawn()) {
+                let xpos = this.fishArray[i].position.x + random(-10, 10);
+                let ypos = this.fishArray[i].position.y + random(-10, 10);
+                let size = 3;
+                this.fishArray.push(new Fish(xpos, ypos, size));
+                this.fishArray[i].hunger = 0; //reset hunger after spawning
+            }
+        }
+    }
+
+    eatFood(foodArray) {
+        let eatradius = 30;
+        for (let food of foodArray) {
+            for (let fish of this.fishArray) {
+                let d = p5.Vector.dist(fish.position, food.position);
+                if (d < eatradius) { // hvis fisken er tæt nok på maden, spis den
+                    food.size -= 0.2; //justerer hvor hurtigt maden spises
+                    fish.hunger += 1; 
+                    console.log("Fish ate food at. Distance: " + d + " Food size: " + food.size);
+                }
+
+            }
+            if (food.size <= 0) {
+                let index = foodArray.indexOf(food);
+                if (index > -1) {
+                    foodArray.splice(index, 1); //fjerner maden fra arrayet hvis den er spist helt
+                }
+            }
+        }
+    }
+
+    displayHunger() {
+        for (let i = 0; i < this.fishArray.length; i++) {
+            let fish = this.fishArray[i];
+            noStroke();
+            fill(255);
+            textSize(12);
+            text(floor(fish.hunger), fish.position.x + 10, fish.position.y - 10); //viser hunger over fisken
+        }
+    }
+
 }
 
 //------------------------------PREDATOR class (extender Fish)----------------------
 class Predator extends Fish {
     constructor(x, y, size, catchRadius) {
         super(x, y, size);               // nedarv position, velocity, acceleration mv.
-        this.maxSpeed = 4;            // langsommere end almindelige fisk 
+        this.maxSpeed = 3.5;            
         this.catchRadius = catchRadius;  // 
-        this.caughtFish = 0;             // tæller for fangede fisk
+        this.caughtFish = 0;   
+                  // tæller for fangede fisk
     }
 
-    // hej jeh er sigga nu er jeg med 
-    
+
     // Finder den nærmeste fisk og bruger seek() 
-hunt(fishArray) {
+    hunt(fishArray) {
     // Hvis der ingen fisk er tilbage, er der intet at jage
     if (fishArray.length === 0) return;
 
@@ -264,7 +334,7 @@ hunt(fishArray) {
     //  seek() kaldes, den beregner en kraft der peger mod den nærmeste fisk og lægger den til accelerationen
     let steering = this.seek(closest.position);
     this.acceleration.add(steering); 
-}
+    }
 
     // Fanger fisk (meget lille radius, så fisken skal røres helt tæt på)
     catchFish(fishArray) {
@@ -320,4 +390,18 @@ hunt(fishArray) {
         textSize(14);
         text(this.caughtFish, this.position.x + 15, this.position.y - 10);
     }
+
+    //hvis rovfisken har fanget mere end 15 fisk, kan den formere sig og lave en ny rovfisk.
+    spawn() {
+        if (this.caughtFish > 15) {
+            let xpos = this.position.x + random(-20, 20);
+            let ypos = this.position.y + random(-20, 20);
+            let size = 6;
+            let catchRadius = 8;
+            predators.push(new Predator(xpos, ypos, size, catchRadius));
+            this.caughtFish = 0; //reset fangede fisk efter spawning
+        }
+    }
+
+
 }
