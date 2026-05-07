@@ -5,7 +5,7 @@ class Mad {
 
     constructor() {
         // Placer maden tilfældigt på lærredet
-        this.position = createvector(random(width), random(height));
+        this.position = createVector(random(width), random(height));
     }
 
     drawFood() {
