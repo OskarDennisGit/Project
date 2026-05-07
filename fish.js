@@ -237,7 +237,7 @@ class Fishes {
 class Predator extends Fish {
     constructor(x, y, size, catchRadius) {
         super(x, y, size);               // nedarv position, velocity, acceleration mv.
-        this.maxSpeed = 1.8;            // langsommere end almindelige fisk 
+        this.maxSpeed = 4;            // langsommere end almindelige fisk 
         this.catchRadius = catchRadius;  // 
         this.caughtFish = 0;             // tæller for fangede fisk
     }
