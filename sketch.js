@@ -15,11 +15,11 @@ function setup() {
     predators = [];
 
     //laver 2 rovfisk med position, størrelse og fangstradius (meget lille radius)
-    predators.push(new Predator(300, 300, 6, 8));
-    predators.push(new Predator(1100, 700, 6, 8));
+    //predators.push(new Predator(300, 300, 6, 8));
+    //predators.push(new Predator(1100, 700, 6, 8));
     
     for (let i = 0; i < 6; i++) {
-    food.push(new Mad());
+        food.push(new Mad());
     }
 }
 
@@ -27,14 +27,15 @@ function setup() {
 function draw() {
     background(20, 100, 200);
 
-    
-    fishes.feed(food);
 
-    fishes.move();
+    fishes.move(food);
     fishes.moveToStart();
 
+    fishes.eatFood(food);
     //spiser og formerer sig (spisefunktion skal arbejdes mere på lige pt er den bare random)
     fishes.spawn();
+    fishes.displayHunger();
+    
 
 
     // opdater alle rovfisk (jager og fanger fisk)
@@ -49,12 +50,13 @@ function draw() {
 
     fishes.draw();
 
-    if (random(1) < 0.02) { // tilfældigt respawn af maden (2% chance hver frame)
+    if (random(1) < 0.01) { // tilfældigt respawn af maden (1% chance hver frame)
         food.push(new Mad());
     }
     
     for (let i = 0; i < food.length; i++) {
         food[i].drawFood();
+        food[i].grow(); // maden vokser over tid
     }
 }
 

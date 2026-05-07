@@ -1,17 +1,19 @@
-let foods = []; // array til at holde maden
-
-
 class Mad {
 
     constructor() {
         // Placer maden tilfældigt på lærredet
         this.position = createVector(random(width), random(height));
+        this.size = random(5, 15); // størrelse på maden
     }
 
     drawFood() {
-        fill("lime"); // farve for maden
+        fill(0, 255, 50, 75); // farve for maden
         noStroke();
-        circle(this.position.x, this.position.y, 10, 10); // tegner maden som en cirkel
+        circle(this.position.x, this.position.y, this.size); // tegner maden som en cirkel
 
+    }
+
+    grow() {
+        this.size += 0.1; // maden vokser over tid
     }
 }

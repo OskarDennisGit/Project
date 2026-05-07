@@ -13,7 +13,7 @@ class Fish {
         this.direction = this.velocity.heading();
 
         this.maxSpeed = 3;
-        this.maxSteeringForce = 0.5;
+        this.maxSteeringForce = 1.2;
 
         this.hunger = 0;
 
@@ -191,33 +191,24 @@ class Fish {
 
         //nærmeste mad søges ved at løbe gennem foodArray og finde den med den korteste distance til denne fisk.
         //denne funktion er ens med hunt() i Predator bare kigger igennem madarrayet i stedet for fiskene.
-        let closest = -1;
+        let closest = null;
         let closestDist = Infinity;
 
-        for (let i = 0; i < foodArray.length; i++) {
-            let d = p5.Vector.dist(this.position, foodArray[i].position);
+        for (let food of foodArray) {
+            let d = p5.Vector.dist(this.position, food.position);
             if (d < closestDist) {
                 closestDist = d;
-                closest = i;
+                closest = food;
             }
         }
 
-        if (closest < 0 || !foodArray[closest]) return;
-
-        let steering = this.seek(foodArray[closest].position);        
-        steering.mult(5); // make food attraction stronger than default steering        
-        this.acceleration.add(steering);
-        
-        // Hvis fisken er tæt nok på maden, spis den og fjern den fra arrayet
-        if (closestDist < 20) {
-            foodArray.splice(closest, 1);
-            this.hunger++; 
+        if (closest != null) {
+            let steering = this.seek(closest.position);
+            steering.mult(2.5); //justerer styrken af søge kraften mod maden
+            this.acceleration.add(steering);
         }
     }
-
-   
-  
-
+    
 } 
 
 //------------------------------container class for all fishes----------------------
@@ -240,8 +231,9 @@ class Fishes {
         }
     }
 
-    move() {
+    move(food) {
         for (let i = 0; i < this.fishArray.length; i++) {
+            this.fishArray[i].seekFood(food);
             this.fishArray[i].school(this.fishArray);
             this.fishArray[i].move();
         }
@@ -278,12 +270,36 @@ class Fishes {
         }
     }
 
-    //spiser random
-    feed(food) {
-            for (let i = 0; i < this.fishArray.length; i++) {
-                this.fishArray[i].seekFood(food);
+    eatFood(foodArray) {
+        let eatradius = 30;
+        for (let food of foodArray) {
+            for (let fish of this.fishArray) {
+                let d = p5.Vector.dist(fish.position, food.position);
+                if (d < eatradius) { // hvis fisken er tæt nok på maden, spis den
+                    food.size -= 0.2; //justerer hvor hurtigt maden spises
+                    fish.hunger += 1; 
+                    console.log("Fish ate food at. Distance: " + d + " Food size: " + food.size);
+                }
+
+            }
+            if (food.size <= 0) {
+                let index = foodArray.indexOf(food);
+                if (index > -1) {
+                    foodArray.splice(index, 1); //fjerner maden fra arrayet hvis den er spist helt
+                }
             }
         }
+    }
+
+    displayHunger() {
+        for (let i = 0; i < this.fishArray.length; i++) {
+            let fish = this.fishArray[i];
+            noStroke();
+            fill(255);
+            textSize(12);
+            text(floor(fish.hunger), fish.position.x + 10, fish.position.y - 10); //viser hunger over fisken
+        }
+    }
 
 }
 
@@ -291,7 +307,7 @@ class Fishes {
 class Predator extends Fish {
     constructor(x, y, size, catchRadius) {
         super(x, y, size);               // nedarv position, velocity, acceleration mv.
-        this.maxSpeed = 4;            
+        this.maxSpeed = 3.5;            
         this.catchRadius = catchRadius;  // 
         this.caughtFish = 0;   
                   // tæller for fangede fisk
