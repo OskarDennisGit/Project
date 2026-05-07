@@ -15,8 +15,8 @@ function setup() {
     predators = [];
 
     //laver 2 rovfisk med position, størrelse og fangstradius (meget lille radius)
-    //predators.push(new Predator(300, 300, 6, 8));
-    //predators.push(new Predator(1100, 700, 6, 8));
+    predators.push(new Predator(300, 300, 6, 8));
+    predators.push(new Predator(1100, 700, 6, 8));
     
     for (let i = 0; i < 6; i++) {
         food.push(new Mad());
@@ -50,7 +50,7 @@ function draw() {
 
     fishes.draw();
 
-    if (random(1) < 0.01) { // tilfældigt respawn af maden (1% chance hver frame)
+    if (random(1) < 0.02) { // tilfældigt respawn af maden (1% chance hver frame)
         food.push(new Mad());
     }
     

@@ -271,23 +271,20 @@ class Fishes {
     }
 
     eatFood(foodArray) {
-        let eatradius = 30;
-        for (let food of foodArray) {
-            for (let fish of this.fishArray) {
-                let d = p5.Vector.dist(fish.position, food.position);
-                if (d < eatradius) { // hvis fisken er tæt nok på maden, spis den
-                    food.size -= 0.2; //justerer hvor hurtigt maden spises
-                    fish.hunger += 1; 
-                    console.log("Fish ate food at. Distance: " + d + " Food size: " + food.size);
-                }
-
+    for (let i = foodArray.length - 1; i >= 0; i--) {
+        let foodItem = foodArray[i];
+        for (let j = this.fishArray.length - 1; j >= 0; j--) {
+            let fish = this.fishArray[j];
+            let dx = fish.position.x - foodItem.position.x;
+            let dy = fish.position.y - foodItem.position.y;
+            let d = Math.sqrt(dx * dx + dy * dy);
+            if (d < fish.size / 2 + foodItem.size / 2) {
+                fish.hunger++;
+                foodItem.size -= 0.5;
+                console.log("EATING", d);
             }
-            if (food.size <= 0) {
-                let index = foodArray.indexOf(food);
-                if (index > -1) {
-                    foodArray.splice(index, 1); //fjerner maden fra arrayet hvis den er spist helt
-                }
-            }
+        }
+        if (foodItem.size <= 0) foodArray.splice(i, 1);
         }
     }
 
