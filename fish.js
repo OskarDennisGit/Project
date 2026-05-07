@@ -1,6 +1,6 @@
 //--------------------------------------------FISH CLASS------------------------------
 
-//tjek
+
 class Fish {
 
     constructor(xpos, ypos, size) {
