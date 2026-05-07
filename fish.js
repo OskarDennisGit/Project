@@ -191,7 +191,7 @@ class Fish {
 
         //nærmeste mad søges ved at løbe gennem foodArray og finde den med den korteste distance til denne fisk.
         //denne funktion er ens med hunt() i Predator bare kigger igennem madarrayet i stedet for fiskene.
-        let closest = null;
+        let closest = -1;
         let closestDist = Infinity;
 
         for (let i = 0; i < foodArray.length; i++) {
@@ -202,13 +202,16 @@ class Fish {
             }
         }
 
-        let steering = this.seek(foodArray[closest].position);
+        if (closest < 0 || !foodArray[closest]) return;
+
+        let steering = this.seek(foodArray[closest].position);        
+        steering.mult(5); // make food attraction stronger than default steering        
         this.acceleration.add(steering);
         
         // Hvis fisken er tæt nok på maden, spis den og fjern den fra arrayet
-        if (closestDist < 4) {
+        if (closestDist < 20) {
             foodArray.splice(closest, 1);
-            this.hunger++; // reset hunger after eating
+            this.hunger++; 
         }
     }
 

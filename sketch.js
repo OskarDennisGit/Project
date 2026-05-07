@@ -26,11 +26,14 @@ function setup() {
 //-------------------------------------------DRAW--------------------------------------------------
 function draw() {
     background(20, 100, 200);
+
+    
+    fishes.feed(food);
+
     fishes.move();
     fishes.moveToStart();
 
     //spiser og formerer sig (spisefunktion skal arbejdes mere på lige pt er den bare random)
-    fishes.feed(food);
     fishes.spawn();
 
 
