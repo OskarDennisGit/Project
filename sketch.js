@@ -41,6 +41,7 @@ function draw() {
     // opdater alle rovfisk (jager og fanger fisk)
     for (let i = 0; i < predators.length; i++) {
         predators[i].hunt(fishes.fishArray);   // find nærmeste fisk og brug seek
+        predators[i].separateFromPredators(predators); //seperate
         predators[i].move();                   // arvet fra Fish – opdater position
         predators[i].moveToStart();            // wrapper rundt (samme som almindelige fisk)
         predators[i].catchFish(fishes.fishArray);
