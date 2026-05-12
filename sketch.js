@@ -59,6 +59,8 @@ function draw() {
         food[i].drawFood();
         food[i].grow(); // maden vokser over tid
     }
+
+    console.log("Antal fisk: " + fishes.fishArray.length);
 }
 
 
