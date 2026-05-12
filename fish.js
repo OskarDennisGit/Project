@@ -347,7 +347,7 @@ class Predator extends Fish {
 
 //seperate predators
 separateFromPredators(predatorArray) {
-    let desiredSeparation = 200; // var 15 for fisk,  meget større her
+    let desiredSeparation = 80; // var 15 for fisk,  meget større her
     let total = createVector(0, 0);
     let count = 0;
 
@@ -387,6 +387,7 @@ separateFromPredators(predatorArray) {
             this.position.y = height + this.size;
         }
     }
+
 
     // Tegner predator som en rød, lidt større trekant
     draw() {
