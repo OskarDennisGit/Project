@@ -345,6 +345,33 @@ class Predator extends Fish {
         }
     }
 
+//seperate predators
+separateFromPredators(predatorArray) {
+    let desiredSeparation = 80; // var 15 for fisk,  meget større her
+    let total = createVector(0, 0);
+    let count = 0;
+
+    for (let i = 0; i < predatorArray.length; i++) {
+        let d = p5.Vector.dist(this.position, predatorArray[i].position);
+        if (d > 0 && d < desiredSeparation) {
+            let difference = p5.Vector.sub(this.position, predatorArray[i].position);
+            difference.normalize();
+            difference.div(d);
+            total.add(difference);
+            count++;
+        }
+    }
+
+    if (count > 0) {
+        total.div(count);
+        total.normalize();
+        total.mult(this.maxSpeed);
+        let steering = p5.Vector.sub(total, this.velocity);
+        steering.limit(this.maxSteeringForce);
+        this.acceleration.add(steering);
+    }
+}
+
     // Wrap-around – præcis samme logik som Fishes.moveToStart (men kun for én fisk)
     moveToStart() {
         if (this.position.x > width + this.size) {
@@ -360,6 +387,7 @@ class Predator extends Fish {
             this.position.y = height + this.size;
         }
     }
+
 
     // Tegner predator som en rød, lidt større trekant
     draw() {
