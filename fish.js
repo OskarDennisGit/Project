@@ -222,6 +222,7 @@ class Fishes {
             let size = 3;
             this.fishArray.push(new Fish(xpos, ypos, size));
         }
+        this.spacialGrid = new SpacialGrid(width, height, 50); //opretter et spacial grid for at optimere schoolingen
     }
 
     draw() {        
@@ -231,10 +232,16 @@ class Fishes {
     }
 
     move(food) {
-        for (let i = 0; i < this.fishArray.length; i++) {
-            this.fishArray[i].seekFood(food);
-            this.fishArray[i].school(this.fishArray);
-            this.fishArray[i].move();
+        this.spacialGrid.clear();
+        for (let fish of this.fishArray) {
+            this.spacialGrid.addBoid(fish); //tilføjer hver fisk til spacial gridet baseret på dens position
+        }
+
+        for (let fish of this.fishArray) {
+            let neighbors = this.spacialGrid.getNeighbors(fish);
+            fish.seekFood(food);
+            fish.school(neighbors);
+            fish.move();
         }
     }
 
