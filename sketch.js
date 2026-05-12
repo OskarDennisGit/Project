@@ -27,26 +27,35 @@ function setup() {
 function draw() {
     background(20, 100, 200);
 
-
     fishes.move(food);
     fishes.moveToStart();
 
+    // fjern fisk der er sultede ihjel
+    for (let i = fishes.fishArray.length - 1; i >= 0; i--) {
+        if (fishes.fishArray[i].hunger <= 0) {
+            fishes.fishArray.splice(i, 1);
+        }
+    }
+
     fishes.eatFood(food);
-    //spiser og formerer sig (spisefunktion skal arbejdes mere på lige pt er den bare random)
     fishes.spawn();
     fishes.displayHunger();
-    
-
 
     // opdater alle rovfisk (jager og fanger fisk)
-    for (let i = 0; i < predators.length; i++) {
-        predators[i].hunt(fishes.fishArray);   // find nærmeste fisk og brug seek
-        predators[i].separateFromPredators(predators); //seperate
-        predators[i].move();                   // arvet fra Fish – opdater position
-        predators[i].moveToStart();            // wrapper rundt (samme som almindelige fisk)
+    for (let i = predators.length - 1; i >= 0; i--) {
+        predators[i].hunt(fishes.fishArray);
+        predators[i].separateFromPredators(predators);
+        predators[i].move();
+        predators[i].moveToStart();
         predators[i].catchFish(fishes.fishArray);
+        predators[i].loseHunger();
+        predators[i].spawn();
         predators[i].draw();
-        predators[i].spawn();   // spawn nye rovfisk hvis nok fisk er fanget
+
+        // fjern rovfisken hvis den er sultet ihjel
+        if (predators[i].hunger <= 0) {
+            predators.splice(i, 1);
+        }
     }
 
     fishes.draw();
@@ -57,8 +66,7 @@ function draw() {
     
     for (let i = 0; i < food.length; i++) {
         food[i].drawFood();
-        food[i].grow(); // maden vokser over tid
+        food[i].grow();
     }
 }
-
 
