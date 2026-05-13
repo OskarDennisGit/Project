@@ -9,6 +9,7 @@ let scavengers;
 //-------------------------------------------SETUP--------------------------------------------------
 
 function setup() {
+    frameRate(60);
     createCanvas(1500, 1000);
     fishes = new Fishes(initialFishAmount);
 

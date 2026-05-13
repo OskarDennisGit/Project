@@ -73,8 +73,10 @@ class Fish {
     }
 // almindelig fisk mister 0.5 hunger i sekundet hvis den rammer 0 dør den i draw() løkken
 loseHunger() {
-    this.hunger -= 0.5 / 60;
+    if (random(1) < 0.50) { // tilfældigt tab af hunger (50% chance hver frame)
+    this.hunger -= 0.5 / 60; // mister 0.5 hunger i sekundet (justeret for 60 FPS) (i gennemsnit mister den 0.25 hunger i sekundet)
     if (this.hunger < 0) this.hunger = 0;
+    }
 }
 
     //Søger efter en given target position og beregner en steering force for at bevæge sig mod den.
