@@ -15,6 +15,7 @@ class Fish {
         this.maxSteeringForce = 1.2;
 
         this.hunger = 5;
+        this.dead = false;
 
         //creating allignment force
         this.allignmentForce = createVector(0, 0);
@@ -25,7 +26,14 @@ class Fish {
     //tyvstjålet fra https://p5js.org/examples/classes-and-objects-flocking/ 
     //tegner trekanter baseret på deres position og retning, så de ser ud som om de svømmer i den retning de peger.
     let theta = this.velocity.heading() + radians(90);
-    fill("orange");
+   if (this.dead) {
+    fill(150);
+    noStroke();
+    circle(this.position.x, this.position.y, this.size * 2);
+    return; // tegn ikke trekanten
+} else {
+        fill("orange");
+    }
     stroke(255);
     push();
         translate(this.position.x, this.position.y);
@@ -36,7 +44,7 @@ class Fish {
             vertex(this.size, this.size * 2);
         endShape(CLOSE);
     pop();
-    }
+}
 
 
     move() {
@@ -96,6 +104,8 @@ loseHunger() {
 
         //for hver boid i arrayet, hvis den er inden for distanceThreshold, tilføj dens hastighed til total og øg count.
         for (let i = 0; i < boids.length; i++) {
+
+            if (boids[i].dead) continue; // ignorer døde fisk
             let d = p5.Vector.dist(this.position, boids[i].position);
             if (d > 0 && d < distanceThreshold) {
                 totalForce.add(boids[i].velocity);
@@ -124,6 +134,8 @@ loseHunger() {
 
         //for hver filk tjæk om den er tæt på. Hvis den er, tilføk dens position til totalen.
         for (let i = 0; i < boids.length; i++) {
+
+            if (boids[i].dead) continue; // ignorer døde fisk
             let d = p5.Vector.dist(this.position, boids[i].position);
             if (d > 0 && d < distanceThreshold) {
                 sumPosition.add(boids[i].position);
@@ -148,6 +160,8 @@ loseHunger() {
 
         //for hver fisk tjæk distancen. Til andre
         for (let i = 0; i < boids.length; i++) {
+
+              if (boids[i].dead) continue; // ignorer døde fisk
             let d = p5.Vector.dist(this.position, boids[i].position);
             
             //hvis den er over nul of under desiredSeparation, 
@@ -237,19 +251,20 @@ class Fishes {
     }
 
     move(food) {
-        this.spacialGrid.clear();
-        for (let fish of this.fishArray) {
-            this.spacialGrid.addBoid(fish); //tilføjer hver fisk til spacial gridet baseret på dens position
-        }
-
-        for (let fish of this.fishArray) {
-            let neighbors = this.spacialGrid.getNeighbors(fish);
-            fish.seekFood(food);
-            fish.school(neighbors);
-            fish.move();
-            fish.loseHunger();
-        }
+    this.spacialGrid.clear();
+    for (let fish of this.fishArray) {
+        this.spacialGrid.addBoid(fish); // tilføjer hver fisk til spacial gridet baseret på dens position
     }
+
+    for (let fish of this.fishArray) {
+        if (fish.dead) continue; // døde fisk bevæger sig ikke
+        let neighbors = this.spacialGrid.getNeighbors(fish);
+        fish.seekFood(food);
+        fish.school(neighbors);
+        fish.move();
+        fish.loseHunger();
+    }
+}
 
     //move fish to the opposite side of the canvas when they go off the edge
     moveToStart() {
@@ -303,6 +318,8 @@ class Fishes {
     displayHunger() {
         for (let i = 0; i < this.fishArray.length; i++) {
             let fish = this.fishArray[i];
+                    if (fish.dead) continue; // vis ikke hunger for døde fisk
+
             noStroke();
             fill(255);
             textSize(12);
@@ -331,12 +348,16 @@ class Predator extends Fish {
 
         // Løb alle fisk igennem og find den nærmeste
         for (let i = 0; i < fishArray.length; i++) {
+            if (fishArray[i].dead) continue; // ignorer døde fisk
             let d = p5.Vector.dist(this.position, fishArray[i].position);
             if (d < closestDist) {
                 closestDist = d;
                 closest = fishArray[i];
             }
         }
+
+         // closest kan være null hvis alle fisk er døde
+    if (closest === null) return;
 
         //  seek() kaldes, den beregner en kraft der peger mod den nærmeste fisk og lægger den til accelerationen
         let steering = this.seek(closest.position);
@@ -345,16 +366,16 @@ class Predator extends Fish {
 
     // Fanger fisk (meget lille radius, så fisken skal røres helt tæt på)
     catchFish(fishArray) {
-        for (let i = fishArray.length - 1; i >= 0; i--) {
-            let fish = fishArray[i];
-            let d = p5.Vector.dist(this.position, fish.position);
-            if (d < this.catchRadius) {
+    for (let i = fishArray.length - 1; i >= 0; i--) {
+        let fish = fishArray[i];
+        if (fish.dead) continue; // ignorer allerede døde fisk
+        let d = p5.Vector.dist(this.position, fish.position);
+        if (d < this.catchRadius) {
                 fishArray.splice(i, 1);
-                this.hunger++;
-            }
+                       this.hunger++;
         }
     }
-
+}
     // seperate predators
     separateFromPredators(predatorArray) {
         let desiredSeparation = 80; // var 15 for fisk, meget større her
@@ -362,6 +383,8 @@ class Predator extends Fish {
         let count = 0;
 
         for (let i = 0; i < predatorArray.length; i++) {
+
+            if (predatorArray[i].dead) continue; // ignorer døde predators
             let d = p5.Vector.dist(this.position, predatorArray[i].position);
             if (d > 0 && d < desiredSeparation) {
                 let difference = p5.Vector.sub(this.position, predatorArray[i].position);
@@ -399,47 +422,54 @@ class Predator extends Fish {
     }
 
     // Tegner predator som en rød, lidt større trekant
-    draw() {
-        let theta = this.velocity.heading() + radians(90);
-        fill("red");
-        stroke(255);
-        push();
-        translate(this.position.x, this.position.y);
-        rotate(theta);
-        beginShape();
-        vertex(0, -this.size * 3);
-        vertex(-this.size * 1.5, this.size * 3);
-        vertex(this.size * 1.5, this.size * 3);
-        endShape(CLOSE);
-        pop();
-
-        // Viser fangstradius 
-        noFill();
-        stroke(255, 0, 0, 100);
-        circle(this.position.x, this.position.y, this.catchRadius * 2);
-
-        // Viser hunger
+  draw() {
+    if (this.dead) {
+        fill(150);
         noStroke();
-        fill(255);
-        textSize(14);
-        text(floor(this.hunger), this.position.x + 15, this.position.y - 10);
+        circle(this.position.x, this.position.y, this.size * 2);
+        return;
     }
 
-    // predator mister 0.75 hunger i sekundet og hvis den rammer 0 dør den i draw() løkken
+    let theta = this.velocity.heading() + radians(90);
+    fill("red");
+    stroke(255);
+    push();
+    translate(this.position.x, this.position.y);
+    rotate(theta);
+    beginShape();
+    vertex(0, -this.size * 3);
+    vertex(-this.size * 1.5, this.size * 3);
+    vertex(this.size * 1.5, this.size * 3);
+    endShape(CLOSE);
+    pop();
+
+    // Viser fangstradius 
+    noFill();
+    stroke(255, 0, 0, 100);
+    circle(this.position.x, this.position.y, this.catchRadius * 2);
+
+    // Viser hunger
+    noStroke();
+    fill(255);
+    textSize(14);
+    text(floor(this.hunger), this.position.x + 15, this.position.y - 10);
+}
+
+    // predator mister 1 hunger i sekundet og hvis den rammer 0 dør den i draw() løkken
     loseHunger() {
-        this.hunger -= 0.75 / 60;
+        this.hunger -= 1 / 60;
         if (this.hunger < 0) this.hunger = 0;
     }
 
     // hvis rovfisken har hunger nok, kan den formere sig og lave en ny rovfisk
     spawn() {
-        if (this.hunger > 25) {
+        if (this.hunger > 40) {
             let xpos = this.position.x + random(-20, 20);
             let ypos = this.position.y + random(-20, 20);
             let size = 6;
             let catchRadius = 8;
             predators.push(new Predator(xpos, ypos, size, catchRadius));
-            this.hunger = 10; // reset hunger efter spawning
+            this.hunger = 4; // reset hunger efter spawning
         }
     }
 }
