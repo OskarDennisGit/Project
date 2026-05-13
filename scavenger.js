@@ -130,14 +130,14 @@ eatCorpse(fishArray, predatorArray, scavengerArray) {
 
     // formerer sig hvis hunger er høj nok
 spawn(scavengersArray) {
-    // spawn kun én plante når hunger rammer 20
-    if (this.hunger >= 20 && !this.hasSpawnedPlant) {
+    // spawn kun én plante når hunger rammer 12
+    if (this.hunger >= 12 && !this.hasSpawnedPlant) {
         food.push(new Mad(this.position.x, this.position.y));
         this.hasSpawnedPlant = true; // sæt flaget så den ikke spawner igen
     }
 
     // formerer sig når hunger rammer 25 og nulstiller flaget
-    if (this.hunger > 25) {
+    if (this.hunger > 14) {
         let xpos = this.position.x + random(-10, 10);
         let ypos = this.position.y + random(-10, 10);
         scavengersArray.push(new Scavenger(xpos, ypos, this.size));

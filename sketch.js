@@ -6,7 +6,7 @@ let predators; //
 let food;
 let scavengers;
 
-//-------------------------------------------SETUP--------------------------------------------------
+//-------------------------------------------SETUP + initial kickstart-objects--------------------------------------------------
 
 function setup() {
     frameRate(60);
@@ -17,19 +17,20 @@ function setup() {
     predators = [];
     scavengers = [];
 
-    //laver 2 rovfisk med position, størrelse og fangstradius (meget lille radius)
+    //Initial 2 rovfisk med position, størrelse og fangstradius (meget lille radius)
     predators.push(new Predator(300, 300, 6, 8));
     predators.push(new Predator(1100, 700, 6, 8));
 
 
-    // laver 4 ådselædere med position og størrelsee
+    // Initial 4 ådselædere med position og størrelsee
     scavengers.push(new Scavenger(400, 400, 4));
     scavengers.push(new Scavenger(800, 600, 4));
     scavengers.push(new Scavenger(1200, 200, 4));
     scavengers.push(new Scavenger(200, 800, 4));
+
     
-//LAV 5 DØDE FISK TIL SCAVENGERS
-for (let i = 0; i < 5; i++) {
+// Initial 15 døde fisk til scavengersne på tilfældige positioner og tilføjer dem til fiskearrayet som døde fisk
+for (let i = 0; i < 15; i++) {
     let xpos = random(width);
     let ypos = random(height);
     let deadFish = new Fish(xpos, ypos, 3);
@@ -114,10 +115,14 @@ for (let i = predators.length - 1; i >= 0; i--) {
 
     fishes.draw();
 
+    /* random mad spawn er deaktiveret for at gøre det 100% afhængigt af scavengersne at holde maden i live
+    
     if (random(1) < 0.02) { // tilfældigt respawn af maden (1% chance hver frame)
         food.push(new Mad()); 
     }
-    
+    */
+
+
     for (let i = 0; i < food.length; i++) {
         food[i].drawFood();
         food[i].grow();
