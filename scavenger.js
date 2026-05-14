@@ -10,40 +10,41 @@ class Scavenger extends Fish {
     }
 
     // tegner ådselæderen som en mørkegrøn oval med 3 ben på hver side
-    draw() {
-        if (this.dead) {
-            fill(150);
-            noStroke();
-            circle(this.position.x, this.position.y, this.size * 2);
-            return;
-        }
+draw() {
+    if (this.dead) {
+        fill(150);
+        noStroke();
+        circle(this.position.x, this.position.y, this.size * 2);
+        return;
+    }
 
-        let theta = this.velocity.heading() + radians(90);
-        push();
-        translate(this.position.x, this.position.y);
-        rotate(theta);
+    let theta = this.velocity.heading() + radians(90);
+    push();
+    translate(this.position.x, this.position.y);
+    rotate(theta);
 
-        stroke(255);
-        strokeWeight(1);
+    stroke(255);
+    strokeWeight(1);
 
         // ben på venstre side
-        line(-this.size, -this.size,      -this.size * 2.5, -this.size * 1.8);
-        line(-this.size,  0,              -this.size * 2.5,  0);
-        line(-this.size,  this.size,      -this.size * 2.5,  this.size * 1.8);
+    line(-this.size, -this.size,      -this.size * 2.5, -this.size * 1.8);
+    line(-this.size,  0,              -this.size * 2.5,  0);
+    line(-this.size,  this.size,      -this.size * 2.5,  this.size * 1.8);
 
         // ben på højre side
-        line(this.size, -this.size,       this.size * 2.5, -this.size * 1.8);
-        line(this.size,  0,               this.size * 2.5,  0);
-        line(this.size,  this.size,       this.size * 2.5,  this.size * 1.8);
+    line(this.size, -this.size,       this.size * 2.5, -this.size * 1.8);
+    line(this.size,  0,               this.size * 2.5,  0);
+    line(this.size,  this.size,       this.size * 2.5,  this.size * 1.8);
 
         // kroppen oven på benene
-        fill(0, 80, 0); // mørkegrøn
-        ellipse(0, 0, this.size * 2, this.size * 4);
+    fill(0, 80, 0); // mørkegrøn
+    ellipse(0, 0, this.size * 2, this.size * 4);
 
-        pop();
-    }
- // finder nærmeste lig i både fisk og predator arrayet
-   seekCorpse(fishArray, predatorArray, scavengerArray) {
+    pop();
+}
+
+// finder nærmeste lig i både fisk og predator arrayet
+seekCorpse(fishArray, predatorArray, scavengerArray) {
     // vi kender endnu ikke det nærmeste lig
     let closest = null;
     let closestDist = Infinity;
@@ -147,7 +148,7 @@ spawn(scavengersArray) {
 }
 
     // wrap-around logik for at holde ådselæderen inden for canvaset
-    moveToStart() {
+moveToStart() {
     if (this.position.x > width + this.size) {
         this.position.x = 0 - this.size;
     }
