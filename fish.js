@@ -165,7 +165,7 @@ loseHunger() {
         //for hver fisk tjæk distancen. Til andre
         for (let i = 0; i < boids.length; i++) {
 
-              if (boids[i].dead) continue; // ignorer døde fisk
+            if (boids[i].dead) continue; // ignorer døde fisk
             let d = p5.Vector.dist(this.position, boids[i].position);
             
             //hvis den er over nul of under desiredSeparation, 

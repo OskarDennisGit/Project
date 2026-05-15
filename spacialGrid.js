@@ -55,7 +55,7 @@ class SpacialGrid {
         let col = Math.floor(fish.position.x / this.cellSize);
         let row = Math.floor(fish.position.y / this.cellSize);
 
-        // Tjek de omkringliggende celler (inklusive den nuværende celle)
+        // Tjek de omkringliggende celler (inklusiv den nuværende celle)
         for (let dx = -1; dx <= 1; dx++) {
             for (let dy = -1; dy <= 1; dy++) {
                 // Beregner den nye kolonne og række med modulo for at håndtere wrap-around
