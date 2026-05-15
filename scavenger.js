@@ -1,4 +1,4 @@
-
+/*
 class Scavenger extends Fish {
     constructor(x, y, size) {
         super(x, y, size);
@@ -190,4 +190,4 @@ separate(scavengerArray) {
     }
 }
 }
-    
+    */
