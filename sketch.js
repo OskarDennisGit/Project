@@ -4,36 +4,36 @@ let initialFishAmount = 100;
 let fishes;
 let predators; //
 let food;
-let scavengers;
+let feeders; // ændret fra scavengers
 
 //-------------------------------------------SETUP + initial kickstart-objects--------------------------------------------------
 
 function setup() {
     frameRate(60);
     createCanvas(1500, 1000);
-    fishes = new Fishes(initialFishAmount);
+    fishes = new BoidFishes(initialFishAmount); // ændret fra Fishes
 
     food = [];
     predators = [];
-    scavengers = [];
+    feeders = []; // ændret fra scavengers
 
     //Initial 2 rovfisk med position, størrelse og fangstradius (meget lille radius)
-    predators.push(new Predator(300, 300, 6, 8));
-    predators.push(new Predator(1100, 700, 6, 8));
+    predators.push(new PredatorFish(300, 300, 6, 8)); // ændret fra Predator
+    predators.push(new PredatorFish(1100, 700, 6, 8));
 
 
     // Initial 4 ådselædere med position og størrelsee
-    scavengers.push(new Scavenger(400, 400, 4));
-    scavengers.push(new Scavenger(800, 600, 4));
-    scavengers.push(new Scavenger(1200, 200, 4));
-    scavengers.push(new Scavenger(200, 800, 4));
+    feeders.push(new Feeder(400, 400, 4)); 
+    feeders.push(new Feeder(800, 600, 4));
+    feeders.push(new Feeder(1200, 200, 4));
+    feeders.push(new Feeder(200, 800, 4));
 
     
 // Initial 15 døde fisk til scavengersne på tilfældige positioner og tilføjer dem til fiskearrayet som døde fisk
 for (let i = 0; i < 15; i++) {
     let xpos = random(width);
     let ypos = random(height);
-    let deadFish = new Fish(xpos, ypos, 3);
+    let deadFish = new BoidFish(xpos, ypos, 3); // ændret fra Fish
     deadFish.dead = true; // gør fisken til et lig
     fishes.fishArray.push(deadFish);
 }
@@ -63,29 +63,25 @@ function draw() {
     fishes.displayHunger();
 
     //tegn alle ådselædere og opdater deres adfærd (søge efter lig, spise lig, formere sig)
-for (let i = scavengers.length - 1; i >= 0; i--) {
-    if (!scavengers[i].dead) {
-        scavengers[i].seekCorpse(fishes.fishArray, predators, scavengers);
-        scavengers[i].separate(scavengers);
-        scavengers[i].move();
-        scavengers[i].moveToStart();
-        scavengers[i].eatCorpse(fishes.fishArray, predators, scavengers);
-        scavengers[i].loseHunger();
-        scavengers[i].spawn(scavengers);
+for (let i = feeders.length - 1; i >= 0; i--) { // 
+    let feeder = feeders[i];
+    if (!feeder.dead) {
+        feeder.seekCorpse(fishes.fishArray, predators, feeders);
+        feeder.separate(feeders);
+        feeder.move();
+        feeder.moveToStart();
+        feeder.eatCorpse(fishes.fishArray, predators, feeders);
+        feeder.loseHunger();
+        feeder.spawn(feeders);
 
-        if (scavengers[i].hunger <= 0) {
-            scavengers[i].dead = true;
+        if (feeder.hunger <= 0) {
+            feeder.dead = true;
         }
+        
     }
-    scavengers[i].draw();
+    feeder.draw();
     
-    // vis hunger over scavengeren
-    if (!scavengers[i].dead) {
-        noStroke();
-        fill(255);
-        textSize(12);
-        text(floor(scavengers[i].hunger), scavengers[i].position.x + 10, scavengers[i].position.y - 10);
-    }
+
 }
 
     // opdater alle rovfisk (jager og fanger fisk)
@@ -128,6 +124,5 @@ for (let i = predators.length - 1; i >= 0; i--) {
         food[i].grow();
     }
 
-    console.log("Antal fisk: " + fishes.fishArray.length);
+    //console.log("Antal fisk: " + fishes.fishArray.length);
 }
-
