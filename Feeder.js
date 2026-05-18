@@ -89,7 +89,7 @@ class Feeder extends Animal {
 
     // spiser lig inden for eatRadius og øger hunger
     eatCorpse(fishArray, predatorArray, feederArray) {
-        // løb gennem alle fisk baglæns så vi kan splice uden at springe nogen over
+        // løb gennem alle fisk
         for (let i = fishArray.length - 1; i >= 0; i--) {
             if (!fishArray[i].dead) continue; // ignorer levende fisk
 
@@ -178,5 +178,45 @@ class Feeder extends Animal {
     loseHunger() {
         this.hunger -= 0.25 / 60;
         if (this.hunger < 0) this.hunger = 0;
+    }
+}
+
+//------------------------------FEEDERS CONTAINER CLASS------------------------------
+// Håndterer alle Feeder objekter samlet
+
+class Feeders {
+
+    feederArray = [];
+
+    constructor(amount) {
+        for (let i = 0; i < amount; i++) {
+            let xpos = random(0, width);
+            let ypos = random(0, height);
+            this.feederArray.push(new Feeder(xpos, ypos, 4));
+        }
+    }
+
+    draw() {
+        for (let feeder of this.feederArray) {
+            feeder.draw();
+        }
+    }
+
+    move(fishArray, predatorArray) {
+        for (let i = this.feederArray.length - 1; i >= 0; i--) {
+            let feeder = this.feederArray[i];
+            if (feeder.dead) continue; // døde feeders bevæger sig ikke
+            feeder.seekCorpse(fishArray, predatorArray, this.feederArray);
+            feeder.separate(this.feederArray);
+            feeder.move(); // arvet fra Animal
+            feeder.moveToStart(); // arvet fra Animal
+            feeder.eatCorpse(fishArray, predatorArray, this.feederArray);
+            feeder.loseHunger();
+            feeder.spawn(this.feederArray);
+
+            if (feeder.hunger <= 0) {
+                feeder.dead = true; // markér som død når sulten når 0
+            }
+        }
     }
 }

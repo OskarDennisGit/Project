@@ -14,19 +14,19 @@ function setup() {
     fishes = new BoidFishes(initialFishAmount); // ændret fra Fishes
 
     food = [];
-    predators = [];
-    feeders = []; // ændret fra scavengers
+    predators = new Predators(0); // ændret fra tomt array
+    feeders = new Feeders(0);     // ændret fra tomt array
 
     //Initial 2 rovfisk med position, størrelse og fangstradius (meget lille radius)
-    predators.push(new PredatorFish(300, 300, 6, 8)); // ændret fra Predator
-    predators.push(new PredatorFish(1100, 700, 6, 8));
+    predators.predatorArray.push(new PredatorFish(300, 300, 6, 8)); // ændret fra Predator
+    predators.predatorArray.push(new PredatorFish(1100, 700, 6, 8));
 
 
     // Initial 4 ådselædere med position og størrelsee
-    feeders.push(new Feeder(400, 400, 4)); 
-    feeders.push(new Feeder(800, 600, 4));
-    feeders.push(new Feeder(1200, 200, 4));
-    feeders.push(new Feeder(200, 800, 4));
+    feeders.feederArray.push(new Feeder(400, 400, 4)); 
+    feeders.feederArray.push(new Feeder(800, 600, 4));
+    feeders.feederArray.push(new Feeder(1200, 200, 4));
+    feeders.feederArray.push(new Feeder(200, 800, 4));
 
     
 // Initial 15 døde fisk til scavengersne på tilfældige positioner og tilføjer dem til fiskearrayet som døde fisk
@@ -63,51 +63,12 @@ function draw() {
     fishes.displayHunger();
 
     //tegn alle ådselædere og opdater deres adfærd (søge efter lig, spise lig, formere sig)
-for (let i = feeders.length - 1; i >= 0; i--) { // 
-    let feeder = feeders[i];
-    if (!feeder.dead) {
-        feeder.seekCorpse(fishes.fishArray, predators, feeders);
-        feeder.separate(feeders);
-        feeder.move();
-        feeder.moveToStart();
-        feeder.eatCorpse(fishes.fishArray, predators, feeders);
-        feeder.loseHunger();
-        feeder.spawn(feeders);
-
-        if (feeder.hunger <= 0) {
-            feeder.dead = true;
-        }
-        
-    }
-    feeder.draw();
-    
-
-}
+    feeders.move(fishes.fishArray, predators.predatorArray);
+    feeders.draw();
 
     // opdater alle rovfisk (jager og fanger fisk)
-for (let i = predators.length - 1; i >= 0; i--) {
-    if (!predators[i].dead) {
-        predators[i].hunt(fishes.fishArray);
-        predators[i].separateFromPredators(predators);
-        predators[i].move();
-        predators[i].moveToStart();
-        predators[i].catchFish(fishes.fishArray);
-        predators[i].loseHunger();
-        predators[i].spawn();
-
-        if (predators[i].hunger <= 0) {
-            predators[i].dead = true;
-        }
-    }
-
-    // fjern rovfisken fra arrayet hvis den er spist af en scavenger
-    if (predators[i].eaten) {
-        predators.splice(i, 1);
-        continue;
-    }
-
-    predators[i].draw();
-}
+    predators.move(fishes.fishArray);
+    predators.draw();
 
     fishes.draw();
 

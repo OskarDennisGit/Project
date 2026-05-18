@@ -114,14 +114,60 @@ class PredatorFish extends Animal {
     }
 
     // hvis rovfisken har hunger nok, kan den formere sig og lave en ny rovfisk
-    spawn() {
+    spawn(predatorArray) {
         if (this.hunger > 40) {
             let xpos = this.position.x + random(-20, 20);
             let ypos = this.position.y + random(-20, 20);
             let size = 6;
             let catchRadius = 8;
-            predators.push(new PredatorFish(xpos, ypos, size, catchRadius));
+            predatorArray.push(new PredatorFish(xpos, ypos, size, catchRadius));
             this.hunger = 4; // reset hunger efter spawning
+        }
+    }
+}
+
+//------------------------------PREDATORS CONTAINER CLASS------------------------------
+// Håndterer alle PredatorFish objekter samlet
+
+class Predators {
+
+    predatorArray = [];
+
+    constructor(amount) {
+        for (let i = 0; i < amount; i++) {
+            let xpos = random(0, width);
+            let ypos = random(0, height);
+            this.predatorArray.push(new PredatorFish(xpos, ypos, 6, 8));
+        }
+    }
+
+    draw() {
+        for (let predator of this.predatorArray) {
+            predator.draw();
+        }
+    }
+
+    move(fishArray) {
+        for (let predator of this.predatorArray) {
+            if (predator.dead) continue; // døde rovfisk bevæger sig ikke
+            predator.hunt(fishArray);
+            predator.separateFromPredators(this.predatorArray);
+            predator.move(); // arvet fra Animal
+            predator.moveToStart(); // arvet fra Animal
+            predator.catchFish(fishArray);
+            predator.loseHunger();
+            predator.spawn(this.predatorArray);
+
+            if (predator.hunger <= 0) {
+                predator.dead = true; // markér som død når sulten når 0
+            }
+        }
+
+        // fjern rovfisk der er spist af en ådselæder
+        for (let i = this.predatorArray.length - 1; i >= 0; i--) {
+            if (this.predatorArray[i].eaten) {
+                this.predatorArray.splice(i, 1); // fjern den spiste rovfisk fra arrayet
+            }
         }
     }
 }
