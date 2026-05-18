@@ -190,7 +190,7 @@ class BoidFishes {
             this.fishArray.push(new BoidFish(xpos, ypos, 3));
         }
         // spacial grid til at optimere schooling
-        this.spacialGrid = new SpacialGrid(width, height, 50); // opretter et spacial grid for at optimere schoolingen
+        this.spacialGrid = new SpacialGrid(50); // opretter et spacial grid for at optimere schoolingen
     }
 
     draw() {

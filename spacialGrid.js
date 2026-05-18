@@ -16,10 +16,10 @@ class Cell {
 }
 
 class SpacialGrid {
-    constructor(canvasWidth, canvasHeight, cellSize) {
+    constructor(cellSize) {
         this.cellSize = cellSize;
-        this.columns = Math.ceil(canvasWidth / cellSize);
-        this.rows = Math.ceil(canvasHeight / cellSize);
+        this.columns = Math.ceil(width / cellSize);
+        this.rows = Math.ceil(height / cellSize);
 
         // 2d array til gridet, hvor hver celle indeholder en liste af fisk
         this.grid = [];
