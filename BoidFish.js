@@ -108,7 +108,7 @@ class BoidFish extends Animal {
 
     // tjekker for fisk tæt på og bevæger sig væk
     seperate(boids) {
-        let desiredSeparation = 15;
+        let desiredSeparation = 25;
         let total = createVector(0, 0);
         let count = 0;
 
@@ -202,7 +202,7 @@ class BoidFishes {
     move(food) {
         // opdater spacial grid med alle fisks positioner
         this.spacialGrid.clear();
-        for (let fish of this.fishArray) {
+        for (let fish of this.fishArray) {  
             this.spacialGrid.addBoid(fish); // tilføjer hver fisk til spacial gridet baseret på dens position
         }
 

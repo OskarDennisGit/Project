@@ -14,7 +14,6 @@ class Cell {
         this.boids = [];
     }
 }
-
 class SpacialGrid {
     constructor(cellSize) {
         this.cellSize = cellSize;
@@ -47,20 +46,22 @@ class SpacialGrid {
         // Sørg for at kolonne og række er inden for grænserne af gridet
         if (col >= 0 && col < this.columns && row >= 0 && row < this.rows) {
             this.grid[row][col].addFish(fish); //tilføj fisken til den korrekte celle
+        } else {
+            console.warn("Fish position out of bounds for grid: ", fish.position);
         }
     }
 
     getNeighbors(fish) {
         let neighbors = [];
-        let col = Math.floor(fish.position.x / this.cellSize);
-        let row = Math.floor(fish.position.y / this.cellSize);
+        let thisCol = Math.floor(fish.position.x / this.cellSize);
+        let thisRow = Math.floor(fish.position.y / this.cellSize);
 
         // Tjek de omkringliggende celler (inklusiv den nuværende celle)
-        for (let dx = -1; dx <= 1; dx++) {
-            for (let dy = -1; dy <= 1; dy++) {
+        for (let cellx = -1; cellx <= 1; cellx++) {
+            for (let celly = -1; celly <= 1; celly++) {
                 // Beregner den nye kolonne og række med modulo for at håndtere wrap-around
-                let newCol = (col + dx + this.columns) % this.columns;
-                let newRow = (row + dy + this.rows) % this.rows;
+                let newCol = (thisCol + cellx + this.columns) % this.columns;
+                let newRow = (thisRow + celly + this.rows) % this.rows;
                 
                 // Tilføj alle fisk i den nye celle til naboerne
                 neighbors.push(...this.grid[newRow][newCol].boids);
