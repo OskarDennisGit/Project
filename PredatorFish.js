@@ -88,11 +88,19 @@ class PredatorFish extends Animal {
         push();
         translate(this.position.x, this.position.y);
         rotate(theta);
-        beginShape();
-        vertex(0, -this.size * 3);
-        vertex(-this.size * 1.5, this.size * 3);
-        vertex(this.size * 1.5, this.size * 3);
-        endShape(CLOSE);
+            //front
+            beginShape();
+                vertex(0, -this.size * 3);    
+                vertex(-this.size, 0);         
+                vertex(0, this.size * 2);      
+                vertex(this.size, 0);          
+            endShape(CLOSE);
+            // tail 
+            beginShape();
+                vertex(0, this.size * 2);      
+                vertex(-this.size * 1.5, this.size * 4); 
+                vertex(this.size * 1.5, this.size * 4);  
+            endShape(CLOSE);
         pop();
 
         // Viser fangstradius 

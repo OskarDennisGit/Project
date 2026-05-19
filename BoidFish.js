@@ -19,10 +19,18 @@ class BoidFish extends Animal {
         push();
             translate(this.position.x, this.position.y);
             rotate(theta);
+            // body — oblong diamond shape
             beginShape();
-                vertex(0, -this.size * 2);
-                vertex(-this.size, this.size * 2);
-                vertex(this.size, this.size * 2);
+                vertex(0, -this.size * 3);    // nose
+                vertex(-this.size, 0);         // left middle
+                vertex(0, this.size * 2);      // back of body
+                vertex(this.size, 0);          // right middle
+            endShape(CLOSE);
+            // tail — triangle below body
+            beginShape();
+                vertex(0, this.size * 2);      // top of tail (connects to body)
+                vertex(-this.size * 1.5, this.size * 4); // left tip of tail
+                vertex(this.size * 1.5, this.size * 4);  // right tip of tail
             endShape(CLOSE);
         pop();
     }
