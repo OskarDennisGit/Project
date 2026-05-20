@@ -1,9 +1,6 @@
 # Project
 
-Dette er min implementering af boids indtil videre.
-Har lavet allignment og cohesion. 
-
-Arbejder på seperation.
+Dette er vores implementering af et hav økosystem
 
 ## HTML Preview
 
