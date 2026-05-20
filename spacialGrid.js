@@ -64,7 +64,7 @@ class SpacialGrid {
                 let newRow = (thisRow + dy + this.rows) % this.rows;
                 
                 // Tilføj alle fisk i den nye celle til naboerne
-                neighbors.push(this.grid[newRow][newCol].boids);
+                neighbors.push(...this.grid[newRow][newCol].boids);
             }
         }
         
