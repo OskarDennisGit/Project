@@ -11,7 +11,7 @@ class Animal {
         this.acceleration = createVector(0, 0);
 
         this.maxSpeed = 3;
-        this.maxSteeringForce = 1.2;
+        this.maxSteeringForce = 1.5;
 
         this.hunger = 6;
         this.dead = false;

@@ -48,6 +48,12 @@ for (let i = 0; i < 15; i++) {
 function draw() {
     background(20, 100, 200);
 
+
+    //add framerate display for debugging
+    fill(255);
+    textSize(16);
+    text("FPS: " + floor(frameRate()), 10, 20);
+
     fishes.move(food);
     fishes.moveToStart();
 
