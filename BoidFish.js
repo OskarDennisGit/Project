@@ -253,6 +253,7 @@ class BoidFishes {
                 if (fish.dead) continue; // døde fisk spiser ikke
                 let dx = fish.position.x - foodItem.position.x;
                 let dy = fish.position.y - foodItem.position.y;
+                
                 let d = Math.sqrt(dx * dx + dy * dy);
                 if (d < fish.size / 2 + foodItem.size / 2) {
                     fish.hunger++;
