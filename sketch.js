@@ -29,8 +29,8 @@ function setup() {
     feeders.feederArray.push(new Feeder(200, 800, 4));
 
     
-// Initial 15 døde fisk til scavengersne på tilfældige positioner og tilføjer dem til fiskearrayet som døde fisk
-for (let i = 0; i < 15; i++) {
+// Initial 20 døde fisk til scavengersne på tilfældige positioner og tilføjer dem til fiskearrayet som døde fisk
+for (let i = 0; i < 20; i++) {
     let xpos = random(width);
     let ypos = random(height);
     let deadFish = new BoidFish(xpos, ypos, 3); // ændret fra Fish
