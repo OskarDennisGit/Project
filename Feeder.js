@@ -220,3 +220,7 @@ class Feeders {
         }
     }
 }
+//for at kunne importere Feeder-klassen i unit-test
+if (typeof module !== 'undefined') {
+  module.exports = { Feeder };
+}
