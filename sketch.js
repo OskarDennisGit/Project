@@ -45,6 +45,8 @@ for (let i = 0; i < 20; i++) {
 }
 
 //-------------------------------------------DRAW--------------------------------------------------
+
+// draw() er hovedloopet der kører 60 gange i sekundet og opdaterer alt på canvas
 function draw() {
     background(20, 100, 200);
 
