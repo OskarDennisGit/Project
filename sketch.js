@@ -5,7 +5,7 @@ let fishes;
 let predators; //
 let food;
 let feeders; // ændret fra scavengers
-
+let operationCounter = 0;
 //-------------------------------------------SETUP + initial kickstart-objects--------------------------------------------------
 
 function setup() {
@@ -46,13 +46,8 @@ for (let i = 0; i < 20; i++) {
 
 //-------------------------------------------DRAW--------------------------------------------------
 function draw() {
-    background(20, 100, 200);
-
-
-    //add framerate display for debugging
-    fill(255);
-    textSize(16);
-    text("FPS: " + floor(frameRate()), 10, 20);
+    
+    background(20, 100, 200);   
 
     fishes.move(food);
     fishes.moveToStart();
@@ -85,11 +80,20 @@ function draw() {
     }
     */
 
-
     for (let i = 0; i < food.length; i++) {
         food[i].drawFood();
         food[i].grow();
     }
 
     //console.log("Antal fisk: " + fishes.fishArray.length);
+
+     //Tilføjer framerate og operations på canvas for kunen se performance
+fill(255);
+noStroke();
+textSize(16);
+text("FPS: " + floor(frameRate()), 150, 20);
+text("Operations: " + operationCounter, 150, 40);
+
+operationCounter = 0; // nulstil til sidst
+
 }
