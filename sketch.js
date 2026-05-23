@@ -5,17 +5,17 @@ let fishes;
 let predators; //
 let food;
 let feeders; // ændret fra scavengers
-
+let operationCounter = 0;
 //-------------------------------------------SETUP + initial kickstart-objects--------------------------------------------------
 
 function setup() {
     frameRate(60);
     createCanvas(1500, 1000);
-    fishes = new BoidFishes(initialFishAmount); // ændret fra Fishes
-
+    
+    fishes = new BoidFishes(initialFishAmount);
     food = [];
-    predators = new Predators(0); // ændret fra tomt array
-    feeders = new Feeders(0);     // ændret fra tomt array
+    predators = new Predators(0);
+    feeders = new Feeders(0);    
 
     //Initial 2 rovfisk med position, størrelse og fangstradius (meget lille radius)
     predators.predatorArray.push(new PredatorFish(300, 300, 6, 8)); // ændret fra Predator
@@ -48,13 +48,8 @@ for (let i = 0; i < 20; i++) {
 
 // draw() er hovedloopet der kører 60 gange i sekundet og opdaterer alt på canvas
 function draw() {
-    background(20, 100, 200);
-
-
-    //add framerate display for debugging
-    fill(255);
-    textSize(16);
-    text("FPS: " + floor(frameRate()), 10, 20);
+    
+    background(20, 100, 200);   
 
     fishes.move(food);
     fishes.moveToStart();
@@ -87,11 +82,38 @@ function draw() {
     }
     */
 
-
     for (let i = 0; i < food.length; i++) {
         food[i].drawFood();
         food[i].grow();
     }
 
     //console.log("Antal fisk: " + fishes.fishArray.length);
+
+     //Tilføjer framerate og operations på canvas for kunen se performance
+fill(255);
+noStroke();
+textSize(16);
+text("FPS: " + floor(frameRate()), 10, 20);
+text("Operations: " + operationCounter, 10, 40);
+text("Tid: " + floor(millis() / 1000) + "s", 10, 60);
+
+operationCounter = 0; // nulstil til sidst
+
+// Tæl antallet af levende fisk ved at filtrere døde fra
+let aliveFish = fishes.fishArray.filter(f => !f.dead).length;
+
+// Hvis der ingen levende fisk er tilbage, så stopper vores prohram
+if (aliveFish === 0) {
+    noLoop(); // stopper p5.js's draw-loop så simulationen fryser
+
+    // Vis en rød besked midt på skærmen om at alle fisk er døde.... RIP...
+    fill(255, 0, 0);
+    textSize(48);
+    textAlign(CENTER, CENTER);
+    text("Alle fisk er døde!", width / 2, height / 2);
+
+    // Vis hvor lang tid simulationen kørte i sekunder
+    text("Antal tid: " + floor(millis() / 1000) + "s", width / 2, height / 2 + 60);
+}
+
 }

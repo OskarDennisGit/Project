@@ -69,6 +69,7 @@ class BoidFish extends Animal {
 
         // for hver boid i arrayet, hvis den er inden for distanceThreshold, tilføj dens hastighed til total og øg count.
         for (let i = 0; i < boids.length; i++) {
+            operationCounter++; // tæller operationer 
             if (boids[i].dead) continue; // ignorer døde fisk
             let d = p5.Vector.dist(this.position, boids[i].position);
             if (d > 0 && d < distanceThreshold) {
@@ -87,6 +88,7 @@ class BoidFish extends Animal {
         } else {
             return createVector(0, 0);
         }
+
     }
 
     // for hver fisk tæt på beregner vi den gennemsnitlige position af de andre fisk
@@ -98,6 +100,7 @@ class BoidFish extends Animal {
 
         // for hver fisk tjek om den er tæt på. Hvis den er, tilføj dens position til totalen.
         for (let i = 0; i < boids.length; i++) {
+            operationCounter++; //tæller operationer
             if (boids[i].dead) continue; // ignorer døde fisk
             let d = p5.Vector.dist(this.position, boids[i].position);
             if (d > 0 && d < distanceThreshold) {
@@ -122,6 +125,7 @@ class BoidFish extends Animal {
 
         // for hver fisk tjek distancen til andre
         for (let i = 0; i < boids.length; i++) {
+            operationCounter++; //tæller operationer
             if (boids[i].dead) continue; // ignorer døde fisk
             let d = p5.Vector.dist(this.position, boids[i].position);
             
@@ -214,7 +218,7 @@ class BoidFishes {
             this.spacialGrid.addBoid(fish); // tilføjer hver fisk til spacial gridet baseret på dens position
         }
 
-        for (let fish of this.fishArray) {
+       for (let fish of this.fishArray) {
             if (fish.dead) continue; // døde fisk bevæger sig ikke
             let neighbors = this.spacialGrid.getNeighbors(fish);
             fish.seekFood(food);
