@@ -11,11 +11,11 @@ let operationCounter = 0;
 function setup() {
     frameRate(60);
     createCanvas(1500, 1000);
-    fishes = new BoidFishes(initialFishAmount); // ændret fra Fishes
-
+    
+    fishes = new BoidFishes(initialFishAmount);
     food = [];
-    predators = new Predators(0); // ændret fra tomt array
-    feeders = new Feeders(0);     // ændret fra tomt array
+    predators = new Predators(0);
+    feeders = new Feeders(0);    
 
     //Initial 2 rovfisk med position, størrelse og fangstradius (meget lille radius)
     predators.predatorArray.push(new PredatorFish(300, 300, 6, 8)); // ændret fra Predator
@@ -45,6 +45,8 @@ for (let i = 0; i < 20; i++) {
 }
 
 //-------------------------------------------DRAW--------------------------------------------------
+
+// draw() er hovedloopet der kører 60 gange i sekundet og opdaterer alt på canvas
 function draw() {
     
     background(20, 100, 200);   

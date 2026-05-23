@@ -78,4 +78,13 @@ class Animal {
 
 //spawn/formering´s fungerer forskelligt for hver type dyr, så den er tom her og overskrives i subklasserne
 spawn() {}
+
+
+
+}
+
+
+// For at kunne importere Animal-klassen i unit-test
+if (typeof module !== 'undefined') {
+  module.exports = { Animal };
 }

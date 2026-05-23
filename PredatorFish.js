@@ -1,4 +1,10 @@
 //------------------------------PREDATORFISH CLASS (extender Animal)----------------------
+
+//til node.js testing, import Animal-klassen hvis den ikke allerede er defineret
+if (typeof Animal === 'undefined') {
+    global.Animal = require('./animal.js').Animal;
+}
+
 class PredatorFish extends Animal {
     constructor(x, y, size, catchRadius) {
         super(x, y, size);               // nedarv position, velocity, acceleration mv.
@@ -178,4 +184,9 @@ class Predators {
             }
         }
     }
+}
+
+// For at kunne importere PredatorFish-klassen i unit-test
+if (typeof module !== 'undefined') {
+    module.exports = { PredatorFish };
 }
