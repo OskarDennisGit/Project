@@ -91,9 +91,27 @@ function draw() {
 fill(255);
 noStroke();
 textSize(16);
-text("FPS: " + floor(frameRate()), 150, 20);
-text("Operations: " + operationCounter, 150, 40);
+text("FPS: " + floor(frameRate()), 10, 20);
+text("Operations: " + operationCounter, 10, 40);
+text("Tid: " + floor(millis() / 1000) + "s", 10, 60);
 
 operationCounter = 0; // nulstil til sidst
+
+// Tæl antallet af levende fisk ved at filtrere døde fra
+let aliveFish = fishes.fishArray.filter(f => !f.dead).length;
+
+// Hvis der ingen levende fisk er tilbage, så stopper vores prohram
+if (aliveFish === 0) {
+    noLoop(); // stopper p5.js's draw-loop så simulationen fryser
+
+    // Vis en rød besked midt på skærmen om at alle fisk er døde.... RIP...
+    fill(255, 0, 0);
+    textSize(48);
+    textAlign(CENTER, CENTER);
+    text("Alle fisk er døde!", width / 2, height / 2);
+
+    // Vis hvor lang tid simulationen kørte i sekunder
+    text("Antal tid: " + floor(millis() / 1000) + "s", width / 2, height / 2 + 60);
+}
 
 }
