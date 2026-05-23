@@ -1,74 +1,79 @@
-//Denne klasse er en implementation af et "spacial grid"
-//Dette dividere canvas i mindre celler, og holder styr på hvilke fisk der er i hvilke celler
-//Dette gør det mere effektivt for hver fisk at tjekke for hinanden når de schooler, da de kun behøver at tjekke de celler der er i nærheden, i stedet for hele canvaset
-class Cell {
-    constructor() {
-        this.boids = [];
-    }
-    
-    addFish(fish) {
-        this.boids.push(fish);
-    }
+//use strict gør at vi får fejl hvis vi prøver at bruge en variabel der ikke er defineret
+'use strict';
 
-    clear() {
-        this.boids = [];
-    }
-}
-class SpacialGrid {
-    constructor(cellSize) {
-        this.cellSize = cellSize;
-        this.columns = Math.ceil(width / cellSize);
-        this.rows = Math.ceil(height / cellSize);
+// importer expect fra chai
+const expect = require('chai').expect;
 
-        // 2d array til gridet, hvor hver celle indeholder en liste af fisk
-        this.grid = [];
-        for (let i = 0; i < this.rows; i++) {
-            this.grid.push([]);            //for hver række, lav et nyt tomt array
-            for (let j = 0; j < this.columns; j++) {
-                this.grid[i].push(new Cell());  //for hver kolonne i rækken, lav en ny celle til fisk
+// importer SpacialGrid og Cell fra vores projektfil
+const { SpacialGrid, Cell } = require('../spacialGrid.js');
+
+// ─────────────────────────────────────────────────────────────────────────────
+// MOCKS
+// ─────────────────────────────────────────────────────────────────────────────
+// SpacialGrid bruger ikke p5's funktioner direkte, men konstruktøren
+// læser width og height som globale værdier for at beregne antal rækker og kolonner.
+// Vi sætter dem til de samme værdier som i det rigtige program.
+global.width = 1500;
+global.height = 1000;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TESTS
+// ─────────────────────────────────────────────────────────────────────────────
+
+// describe grupperer alle tests der handler om SpacialGrid
+describe('SpacialGrid', function() {
+
+    // grid erklæres her uden værdi så den er tilgængelig i hele describe-blokken,
+    // men selve objektet oprettes i beforeEach så hver test får et frisk grid
+    let grid;
+
+    // beforeEach køres automatisk før hver enkelt test og opretter
+    // et nyt SpacialGrid med cellestørrelse 50 — samme opsætning som i programmet
+    beforeEach(function() {
+        grid = new SpacialGrid(50);
+    });
+
+    // describe grupperer alle tests der handler om clear()-metoden
+    describe('clear()', function() {
+
+        // test 1:
+        // vi tilføjer tre fisk til forskellige celler i gridet via addBoid(),
+        // kalder clear(), og løber derefter alle celler igennem for at tjekke
+        // at ingen af dem stadig indeholder fisk.
+        // found starter som false og sættes til true hvis en celle ikke er tom —
+        // til sidst forventer vi at found stadig er false.
+        it('should empty all cells after clear', function(done) {
+            let fish1 = { position: { x: 75, y: 75 } };    // celle (1,1)
+            let fish2 = { position: { x: 200, y: 300 } };  // celle (4,6)
+            let fish3 = { position: { x: 800, y: 600 } };  // celle (16,12)
+
+            grid.addBoid(fish1);
+            grid.addBoid(fish2);
+            grid.addBoid(fish3);
+
+            grid.clear();
+
+            let found = false;
+            for (let row of grid.grid) {
+                for (let cell of row) {
+                    if (cell.boids.length > 0) found = true;
+                }
             }
-        }
-    }
-    
+            expect(found).to.equal(false);
+            done();
+        });
 
-    clear() {
-        for (let i = 0; i < this.rows; i++) {
-            for (let j = 0; j < this.columns; j++) {
-                this.grid[i][j].clear(); //tøm hver celle for fisk
-            }
-        }
-    }
+        // test 2:
+        // clear() kaldes på et helt tomt grid uden at vi har tilføjet nogen fisk.
+        // vi pakker kaldet ind i en funktion og bruger .to.not.throw() —
+        // testen sikrer at clear() håndterer et tomt grid uden at kaste en fejl.
+        it('should not throw on empty grid', function(done) {
+            expect(function() {
+                grid.clear();
+            }).to.not.throw();
+            done();
+        });
 
-    addBoid(fish) {
-        let col = Math.floor(fish.position.x / this.cellSize); //find kolonnen baseret på fiskens x position
-        let row = Math.floor(fish.position.y / this.cellSize); //find rækken baseret på fiskens y position
+    });
 
-        // Sørg for at kolonne og række er inden for grænserne af gridet
-        if (col >= 0 && col < this.columns && row >= 0 && row < this.rows) {
-            this.grid[row][col].addFish(fish); //tilføj fisken til den korrekte celle
-        } else {
-            console.warn("Fish position out of bounds for grid: ", fish.position);
-        }
-    }
-
-    getNeighbors(fish) {
-        let neighbors = [];
-        let thisCol = Math.floor(fish.position.x / this.cellSize);
-        let thisRow = Math.floor(fish.position.y / this.cellSize);
-
-        // Tjek de omkringliggende celler (inklusiv den nuværende celle)
-        for (let dx = -1; dx <= 1; dx++) {
-            for (let dy = -1; dy <= 1; dy++) {
-                // Beregner den nye kolonne og række til at håndtere wrap-around
-                let newCol = (thisCol + dx + this.columns) % this.columns;
-                let newRow = (thisRow + dy + this.rows) % this.rows;
-                
-                // Tilføj alle fisk i den nye celle til naboerne
-                neighbors.push(...this.grid[newRow][newCol].boids);
-            }
-        }
-        
-        return neighbors; // returnere alle boids i de 9 celler (den nuværende og de 8 omkringliggende) som naboer
-    }
-    
-}
+});
