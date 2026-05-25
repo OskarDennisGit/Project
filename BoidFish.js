@@ -221,6 +221,7 @@ class BoidFishes {
        for (let fish of this.fishArray) {
             if (fish.dead) continue; // døde fisk bevæger sig ikke
             let neighbors = this.spacialGrid.getNeighbors(fish);
+            //let neighbors = this.fishArray; // hvis vi ikke bruger spacial grid, så er alle fisk naboer
             fish.seekFood(food);
             fish.school(neighbors);
             fish.move(); // arvet fra Animal

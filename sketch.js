@@ -89,7 +89,7 @@ function draw() {
 
     //console.log("Antal fisk: " + fishes.fishArray.length);
 
-     //Tilføjer framerate og operations på canvas for kunen se performance
+     //Tilføjer framerate og operations per frame  på canvas for kunen se performance
 fill(255);
 noStroke();
 textSize(16);
@@ -97,7 +97,8 @@ text("FPS: " + floor(frameRate()), 10, 20);
 text("Operations: " + operationCounter, 10, 40);
 text("Tid: " + floor(millis() / 1000) + "s", 10, 60);
 
-operationCounter = 0; // nulstil til sidst
+operationCounter = 0; // nulstil ved hver frame for at tælle nye operationer i næste frame
+
 
 // Tæl antallet af levende fisk ved at filtrere døde fra
 let aliveFish = fishes.fishArray.filter(f => !f.dead).length;
