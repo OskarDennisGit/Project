@@ -136,7 +136,7 @@ class Feeder extends Animal {
             this.hasSpawnedPlant = true; // sæt flaget så den ikke spawner igen
         }
 
-        // formerer sig når hunger rammer 25 og nulstiller flaget
+        // formerer sig når hunger rammer 14 og nulstiller flaget
         if (this.hunger > 14) {
             let xpos = this.position.x + random(-10, 10);
             let ypos = this.position.y + random(-10, 10);

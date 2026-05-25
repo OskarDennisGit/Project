@@ -8,15 +8,15 @@ const expect = require('chai').expect;
 const { Animal } = require('../animal.js');
 const { PredatorFish } = require('../PredatorFish.js');
 
-// ─────────────────────────────────────────────────────────────────────────────
+
 // MOCKS
-// ─────────────────────────────────────────────────────────────────────────────
+
 // Vores klasser bruger p5.js funktioner som createVector() og random()
 // Disse funktioner findes normalt kun i en browser, ikke i Node.js
 // I stedet for at importere hele p5.js laver vi enkle mock-versioner
 // der opfylder præcis det vores klasser har brug for
 // Denne tilgang er inspireret af Andy Timmons' p5.js unit testing guide
-// ─────────────────────────────────────────────────────────────────────────────
+
 
 // mock af p5's createVector
 // Predator arver Animal's konstruktør, som kalder createVector() for at lave position,
@@ -54,10 +54,8 @@ global.random = function(min, max) {
 global.width = 1500;
 global.height = 1000;
 
-// ─────────────────────────────────────────────────────────────────────────────
-// TESTS
-// ─────────────────────────────────────────────────────────────────────────────
 
+// TESTS:
 // describe grupperer alle tests der handler om PredatorFish's loseHunger
 describe('PredatorFish loseHunger()', function() {
 

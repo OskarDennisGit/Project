@@ -58,7 +58,6 @@ describe('SpacialGrid', function() {
 
 
         //test 2: clear() på et tomt grid skal ikke kaste en fejl
-        // clear() på et tomt grid skal ikke kaste en fejl
         it('should not throw on empty grid', function(done) {
             
             
