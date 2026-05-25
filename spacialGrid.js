@@ -72,3 +72,7 @@ class SpacialGrid {
     }
     
 }
+// For at kunne importere SpacialGrid-klassen i unit-test
+if (typeof module !== 'undefined') {
+    module.exports = { SpacialGrid, Cell };
+}
