@@ -105,7 +105,7 @@ let aliveFish = fishes.fishArray.filter(f => !f.dead).length;
 
 // Hvis der ingen levende fisk er tilbage, så stopper vores prohram
 if (aliveFish === 0) {
-    noLoop(); // stopper p5.js's draw-loop så simulationen fryser
+    noLoop(); // stopper drawloop så simulationen fryser
 
     // Vis en rød besked midt på skærmen om at alle fisk er døde.... RIP...
     fill(255, 0, 0);
