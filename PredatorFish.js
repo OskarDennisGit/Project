@@ -151,7 +151,7 @@ class Predators {
         for (let i = 0; i < amount; i++) {
             let xpos = random(0, width);
             let ypos = random(0, height);
-            this.predatorArray.push(new PredatorFish(xpos, ypos, 6, 8));
+            this.predatorArray.push(new PredatorFish(xpos, ypos, 6, 8)); //size 6, catchRadius 8
         }
     }
 
