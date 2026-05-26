@@ -10,7 +10,7 @@ class BoidFish extends Animal {
     }
 
     // tegner fisken som en orange trekant der peger i bevægelsesretningen
-    // tyvstjålet fra https://p5js.org/examples/classes-and-objects-flocking/
+    // Med inspiration fra https://p5js.org/examples/classes-and-objects-flocking/
     // tegner trekanter baseret på deres position og retning, så de ser ud som om de svømmer i den retning de peger.
     drawAlive() {
         let theta = this.velocity.heading() + radians(90);
